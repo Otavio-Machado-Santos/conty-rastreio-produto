@@ -1,0 +1,110 @@
+{
+  "challenge": 7,
+  "title": "Rastreio do produto enviado ao criador",
+  "reviewed_sha": "f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460",
+  "base_sha": "7ea9eb9dc55d965c32b37892c10b78c600114db9",
+  "reviewer": "/root/implementar_descoberta — revisão independente A, Codex; não implementou este desafio",
+  "runtime": "Node v22.23.3",
+  "repository": "/Users/flowbix_redfinger/XiaomiMiMoProjects/conty challenge/projetos/conty-rastreio-produto",
+  "scope": "Somente leitura de enunciado, README, todo o código, UI demonstrativa, scripts, fixtures e testes. Probes adicionais e relatórios fora do repositório; nenhum push ou envio.",
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit_code": 0,
+      "result": "f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460, confirmado antes e depois"
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "result": "27 testes, 27 passaram, 0 falharam; duração reportada 238.28975 ms",
+      "output_file": "revisoes/07-a-tests.txt"
+    },
+    {
+      "command": "node --check em todos os arquivos .js de src, scripts e test",
+      "exit_code": 0,
+      "result": "12 arquivos passaram, nenhum diagnóstico",
+      "output_file": "revisoes/07-a-syntax-checks.json"
+    },
+    {
+      "command": "node '/Users/flowbix_redfinger/XiaomiMiMoProjects/conty challenge/revisoes/07-a-adversarial.mjs'",
+      "exit_code": 1,
+      "result": "5 grupos passaram; 1 falhou. Mapeamento de cinco estados e seis rótulos desconhecidos, 720 permutações, deduplicação, limites exatos, entrega sem alerta e HTTP real passaram. Regressão de cronologia no cruzamento do ano UTC 9999 foi reproduzida.",
+      "output_file": "revisoes/07-a-adversarial-results.json"
+    },
+    {
+      "command": "git diff 7ea9eb9dc55d965c32b37892c10b78c600114db9...f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460 --check",
+      "exit_code": 0,
+      "result": "Nenhum erro de whitespace"
+    },
+    {
+      "command": "git status --porcelain",
+      "exit_code": 0,
+      "result": "Vazio antes e após: repositório não alterado"
+    }
+  ],
+  "contract_validation": [
+    {
+      "requirement": "Registrar código e provedor HTTP substituível",
+      "result": "pass",
+      "evidence": "Domínio recebe register/getEvents, sem importar o dialeto do agregador. Probes usaram tanto um provedor normalizado em memória como API → adaptador → provedor HTTP reais. Vinte cadastros concorrentes do mesmo código produziram um 201, dezenove 200 e somente um POST ao agregador."
+    },
+    {
+      "requirement": "Normalizar cinco status e manter desconhecidos seguros",
+      "result": "pass",
+      "evidence": "Cinco mapeamentos exatos foram confirmados. DELIVERED, DELIVERY_CONFIRMED com espaço, ENTREGUE, __proto__, constructor e toString viram desconhecido. Unknown após evento conhecido não inventa entrega; unknown isolado não inventa trânsito ou alerta."
+    },
+    {
+      "requirement": "Duplicatas e histórico idempotente",
+      "result": "pass",
+      "evidence": "720 ordens de seis eventos produziram exatamente o mesmo histórico cronológico. Repetir o lote e reemitir a mesma ocorrência com outro ID não duplica. Probes HTTP confirmaram equivalência de timestamps UTC e -03:00 e preservação integral após lote parcialmente inválido."
+    },
+    {
+      "requirement": "Evento antigo recebido depois não regride status",
+      "result": "changes_required",
+      "evidence": "Passa nos eventos operacionais de 2026, inclusive offset de fuso e consultas concorrentes da suíte. Falha em uma data válida aceita pelo próprio domínio quando a conversão UTC gera o ano estendido +010000; a comparação lexical reordena os instantes. Ver 07-A-01."
+    },
+    {
+      "requirement": "Atraso configurável com data controlada, sem marcar entregue",
+      "result": "pass",
+      "evidence": "Limites de 1 ms, 1 segundo e 72 horas testados em limite−1, limite e limite+1. Alerta somente após o limite; clock anterior ao início produz elapsedMs=0. Entrega termina a contagem e mantém active=false mesmo consultada 100 dias depois."
+    },
+    {
+      "requirement": "Exemplo bruto/normalizado, API, testes e nota de IA",
+      "result": "pass",
+      "evidence": "Fixtures e exemplo normalizado completos presentes, com desconhecido auditável. README explica comando, API, regras e armazenamento em memória. Nota não inventa revisão humana; o coordenador deve atualizar revisões independentes após os gates finais. Não executei verify:http porque ele sobrescreve evidências do repositório; usei servidores HTTP independentes."
+    }
+  ],
+  "findings": [
+    {
+      "id": "07-A-01",
+      "priority": "P3",
+      "file": "src/domain/tracking-service.js",
+      "line": 55,
+      "end_line": 55,
+      "title": "Comparação por texto regride o status em instante UTC de ano estendido",
+      "description": "canonicalEvent aceita um timestamp de quatro dígitos com offset e usa toISOString. Para 9999-12-31T23:30:00-03:00, a representação canônica é +010000-01-01T02:30:00.000Z. compareEvents compara o texto; '+' ordena antes de '9', de modo que o instante posterior fica antes de um evento antigo de 9999. O estado e lastEventAt então apontam para o evento antigo. É um caso operacional remoto, mas viola a regra cronológica para uma entrada aceita, sem restrição de ano na documentação.",
+      "proof": {
+        "provider_interface": "register/getEvents retornando eventos normalizados",
+        "first_batch": [
+          { "id": "new", "occurredAt": "9999-12-31T23:30:00-03:00", "status": "em_transito", "carrierStatus": "MOVING_BETWEEN_HUBS" }
+        ],
+        "first_status": "em_transito",
+        "second_batch_received_later": [
+          { "id": "old", "occurredAt": "9999-12-31T22:00:00Z", "status": "postado", "carrierStatus": "PACKAGE_ACCEPTED" }
+        ],
+        "expected": "status em_transito e statusAt +010000-01-01T02:30:00.000Z",
+        "observed": "status postado e statusAt 9999-12-31T22:00:00.000Z",
+        "reproduction": "revisoes/07-a-adversarial.mjs, grupo cronologia de timestamps aceitos quando o offset cruza o ano UTC 9999",
+        "full_output": "revisoes/07-a-adversarial-results.json"
+      },
+      "recommendation": "Ordenar primeiro pelo instante numérico Date.parse(a.occurredAt) - Date.parse(b.occurredAt), mantendo os demais desempates. Alternativamente rejeitar explicitamente timestamps cuja conversão UTC saia do intervalo suportado e documentar essa restrição. Adicionar uma regressão que chegue com o evento antigo depois do novo."
+    }
+  ],
+  "outside_contract_suggestions": [],
+  "verdict": "changes_required",
+  "limitations": [
+    "O achado tem baixa prioridade operacional por envolver o ano 9999. O gate permanece changes_required porque a API aceita a entrada e o requisito de cronologia não define esse limite.",
+    "A revisão vale apenas para o SHA fixado; após a correção, conferir o diff e rerodar o probe falho e os testes apropriados antes de finalizar a entrega.",
+    "Nenhuma transportadora real, persistência de produção, notificação ou deploy foram validados. Essas exclusões estão descritas no README."
+  ]
+}

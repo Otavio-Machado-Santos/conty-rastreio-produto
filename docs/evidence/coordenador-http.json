@@ -1,0 +1,748 @@
+{
+  "challenge": 7,
+  "started_at": "2026-10-09T19:42:39.012Z",
+  "finished_at": "2026-10-09T19:42:39.079Z",
+  "environment": "macOS, Node22, HTTP loopback, dados sintéticos",
+  "passed": true,
+  "steps": [
+    {
+      "label": "Cadastrar CTY123 no agregador HTTP; repetir cadastro é idempotente",
+      "method": "POST",
+      "path": "/shipments",
+      "request": {
+        "code": "CTY123"
+      },
+      "http_status": 200,
+      "response": {
+        "code": "CTY123",
+        "registeredAt": "2026-10-09T19:38:35.316Z",
+        "status": "entregue",
+        "statusAt": "2026-10-08T16:00:00.000Z",
+        "lastEventAt": "2026-10-08T17:00:00.000Z",
+        "transitStartedAt": "2026-10-08T08:00:00.000Z",
+        "alert": {
+          "active": false,
+          "reason": "entrega_concluida",
+          "elapsedMs": 28800000,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.024Z"
+        },
+        "history": [
+          {
+            "id": "e-posted",
+            "occurredAt": "2026-10-08T08:00:00.000Z",
+            "status": "postado",
+            "carrierStatus": "PACKAGE_ACCEPTED"
+          },
+          {
+            "id": "e-transit",
+            "occurredAt": "2026-10-08T10:00:00.000Z",
+            "status": "em_transito",
+            "carrierStatus": "MOVING_BETWEEN_HUBS"
+          },
+          {
+            "id": "e-route",
+            "occurredAt": "2026-10-08T14:00:00.000Z",
+            "status": "saiu_para_entrega",
+            "carrierStatus": "DRIVER_ROUTE"
+          },
+          {
+            "id": "e-delivered",
+            "occurredAt": "2026-10-08T16:00:00.000Z",
+            "status": "entregue",
+            "carrierStatus": "DELIVERY_CONFIRMED"
+          },
+          {
+            "id": "e-unknown",
+            "occurredAt": "2026-10-08T17:00:00.000Z",
+            "status": "desconhecido",
+            "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "code",
+          "expected": "CTY123",
+          "actual": "CTY123",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 17
+    },
+    {
+      "label": "Eventos repetidos e fora de ordem: entregue, cinco ocorrências e nenhum alerta",
+      "method": "POST",
+      "path": "/shipments/CTY123/sync",
+      "http_status": 200,
+      "response": {
+        "code": "CTY123",
+        "registeredAt": "2026-10-09T19:38:35.316Z",
+        "status": "entregue",
+        "statusAt": "2026-10-08T16:00:00.000Z",
+        "lastEventAt": "2026-10-08T17:00:00.000Z",
+        "transitStartedAt": "2026-10-08T08:00:00.000Z",
+        "alert": {
+          "active": false,
+          "reason": "entrega_concluida",
+          "elapsedMs": 28800000,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.037Z"
+        },
+        "history": [
+          {
+            "id": "e-posted",
+            "occurredAt": "2026-10-08T08:00:00.000Z",
+            "status": "postado",
+            "carrierStatus": "PACKAGE_ACCEPTED"
+          },
+          {
+            "id": "e-transit",
+            "occurredAt": "2026-10-08T10:00:00.000Z",
+            "status": "em_transito",
+            "carrierStatus": "MOVING_BETWEEN_HUBS"
+          },
+          {
+            "id": "e-route",
+            "occurredAt": "2026-10-08T14:00:00.000Z",
+            "status": "saiu_para_entrega",
+            "carrierStatus": "DRIVER_ROUTE"
+          },
+          {
+            "id": "e-delivered",
+            "occurredAt": "2026-10-08T16:00:00.000Z",
+            "status": "entregue",
+            "carrierStatus": "DELIVERY_CONFIRMED"
+          },
+          {
+            "id": "e-unknown",
+            "occurredAt": "2026-10-08T17:00:00.000Z",
+            "status": "desconhecido",
+            "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "status",
+          "expected": "entregue",
+          "actual": "entregue",
+          "passed": true
+        },
+        {
+          "field": "statusAt",
+          "expected": "2026-10-08T16:00:00.000Z",
+          "actual": "2026-10-08T16:00:00.000Z",
+          "passed": true
+        },
+        {
+          "field": "lastEventAt",
+          "expected": "2026-10-08T17:00:00.000Z",
+          "actual": "2026-10-08T17:00:00.000Z",
+          "passed": true
+        },
+        {
+          "field": "history.length",
+          "expected": 5,
+          "actual": 5,
+          "passed": true
+        },
+        {
+          "field": "history.0.status",
+          "expected": "postado",
+          "actual": "postado",
+          "passed": true
+        },
+        {
+          "field": "history.1.status",
+          "expected": "em_transito",
+          "actual": "em_transito",
+          "passed": true
+        },
+        {
+          "field": "history.2.status",
+          "expected": "saiu_para_entrega",
+          "actual": "saiu_para_entrega",
+          "passed": true
+        },
+        {
+          "field": "history.3.status",
+          "expected": "entregue",
+          "actual": "entregue",
+          "passed": true
+        },
+        {
+          "field": "history.4.status",
+          "expected": "desconhecido",
+          "actual": "desconhecido",
+          "passed": true
+        },
+        {
+          "field": "history.4.carrierStatus",
+          "expected": "DELIVERED_TO_ANOTHER_DIMENSION",
+          "actual": "DELIVERED_TO_ANOTHER_DIMENSION",
+          "passed": true
+        },
+        {
+          "field": "alert.active",
+          "expected": false,
+          "actual": false,
+          "passed": true
+        },
+        {
+          "field": "alert.reason",
+          "expected": "entrega_concluida",
+          "actual": "entrega_concluida",
+          "passed": true
+        },
+        {
+          "field": "alert.elapsedMs",
+          "expected": 28800000,
+          "actual": 28800000,
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 10
+    },
+    {
+      "label": "Nova consulta HTTP preserva integralmente o histórico e a entrega concluída",
+      "method": "POST",
+      "path": "/shipments/CTY123/sync",
+      "http_status": 200,
+      "response": {
+        "code": "CTY123",
+        "registeredAt": "2026-10-09T19:38:35.316Z",
+        "status": "entregue",
+        "statusAt": "2026-10-08T16:00:00.000Z",
+        "lastEventAt": "2026-10-08T17:00:00.000Z",
+        "transitStartedAt": "2026-10-08T08:00:00.000Z",
+        "alert": {
+          "active": false,
+          "reason": "entrega_concluida",
+          "elapsedMs": 28800000,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.047Z"
+        },
+        "history": [
+          {
+            "id": "e-posted",
+            "occurredAt": "2026-10-08T08:00:00.000Z",
+            "status": "postado",
+            "carrierStatus": "PACKAGE_ACCEPTED"
+          },
+          {
+            "id": "e-transit",
+            "occurredAt": "2026-10-08T10:00:00.000Z",
+            "status": "em_transito",
+            "carrierStatus": "MOVING_BETWEEN_HUBS"
+          },
+          {
+            "id": "e-route",
+            "occurredAt": "2026-10-08T14:00:00.000Z",
+            "status": "saiu_para_entrega",
+            "carrierStatus": "DRIVER_ROUTE"
+          },
+          {
+            "id": "e-delivered",
+            "occurredAt": "2026-10-08T16:00:00.000Z",
+            "status": "entregue",
+            "carrierStatus": "DELIVERY_CONFIRMED"
+          },
+          {
+            "id": "e-unknown",
+            "occurredAt": "2026-10-08T17:00:00.000Z",
+            "status": "desconhecido",
+            "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "history",
+          "expected": [
+            {
+              "id": "e-posted",
+              "occurredAt": "2026-10-08T08:00:00.000Z",
+              "status": "postado",
+              "carrierStatus": "PACKAGE_ACCEPTED"
+            },
+            {
+              "id": "e-transit",
+              "occurredAt": "2026-10-08T10:00:00.000Z",
+              "status": "em_transito",
+              "carrierStatus": "MOVING_BETWEEN_HUBS"
+            },
+            {
+              "id": "e-route",
+              "occurredAt": "2026-10-08T14:00:00.000Z",
+              "status": "saiu_para_entrega",
+              "carrierStatus": "DRIVER_ROUTE"
+            },
+            {
+              "id": "e-delivered",
+              "occurredAt": "2026-10-08T16:00:00.000Z",
+              "status": "entregue",
+              "carrierStatus": "DELIVERY_CONFIRMED"
+            },
+            {
+              "id": "e-unknown",
+              "occurredAt": "2026-10-08T17:00:00.000Z",
+              "status": "desconhecido",
+              "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+            }
+          ],
+          "actual": [
+            {
+              "id": "e-posted",
+              "occurredAt": "2026-10-08T08:00:00.000Z",
+              "status": "postado",
+              "carrierStatus": "PACKAGE_ACCEPTED"
+            },
+            {
+              "id": "e-transit",
+              "occurredAt": "2026-10-08T10:00:00.000Z",
+              "status": "em_transito",
+              "carrierStatus": "MOVING_BETWEEN_HUBS"
+            },
+            {
+              "id": "e-route",
+              "occurredAt": "2026-10-08T14:00:00.000Z",
+              "status": "saiu_para_entrega",
+              "carrierStatus": "DRIVER_ROUTE"
+            },
+            {
+              "id": "e-delivered",
+              "occurredAt": "2026-10-08T16:00:00.000Z",
+              "status": "entregue",
+              "carrierStatus": "DELIVERY_CONFIRMED"
+            },
+            {
+              "id": "e-unknown",
+              "occurredAt": "2026-10-08T17:00:00.000Z",
+              "status": "desconhecido",
+              "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+            }
+          ],
+          "passed": true
+        },
+        {
+          "field": "registeredAt",
+          "expected": "2026-10-09T19:38:35.316Z",
+          "actual": "2026-10-09T19:38:35.316Z",
+          "passed": true
+        },
+        {
+          "field": "statusAt",
+          "expected": "2026-10-08T16:00:00.000Z",
+          "actual": "2026-10-08T16:00:00.000Z",
+          "passed": true
+        },
+        {
+          "field": "status",
+          "expected": "entregue",
+          "actual": "entregue",
+          "passed": true
+        },
+        {
+          "field": "alert.active",
+          "expected": false,
+          "actual": false,
+          "passed": true
+        },
+        {
+          "field": "alert.elapsedMs",
+          "expected": 28800000,
+          "actual": 28800000,
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 9
+    },
+    {
+      "label": "Cadastrar fixture CTYLATE com trânsito iniciado há 96 horas",
+      "method": "POST",
+      "path": "/shipments",
+      "request": {
+        "code": "CTYLATE"
+      },
+      "http_status": 200,
+      "response": {
+        "code": "CTYLATE",
+        "registeredAt": "2026-10-09T19:38:35.325Z",
+        "status": "em_transito",
+        "statusAt": "2026-10-06T01:38:35.325Z",
+        "lastEventAt": "2026-10-06T01:38:35.325Z",
+        "transitStartedAt": "2026-10-05T19:38:35.325Z",
+        "alert": {
+          "active": true,
+          "reason": "limite_de_transito_excedido",
+          "elapsedMs": 345843727,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.052Z"
+        },
+        "history": [
+          {
+            "id": "late-posted",
+            "occurredAt": "2026-10-05T19:38:35.325Z",
+            "status": "postado",
+            "carrierStatus": "PACKAGE_ACCEPTED"
+          },
+          {
+            "id": "late-transit",
+            "occurredAt": "2026-10-06T01:38:35.325Z",
+            "status": "em_transito",
+            "carrierStatus": "MOVING_BETWEEN_HUBS"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "code",
+          "expected": "CTYLATE",
+          "actual": "CTYLATE",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 6
+    },
+    {
+      "label": "Pacote em trânsito além do limite configurado de 72 h tem alerta ativo",
+      "method": "POST",
+      "path": "/shipments/CTYLATE/sync",
+      "http_status": 200,
+      "response": {
+        "code": "CTYLATE",
+        "registeredAt": "2026-10-09T19:38:35.325Z",
+        "status": "em_transito",
+        "statusAt": "2026-10-06T01:38:35.325Z",
+        "lastEventAt": "2026-10-06T01:38:35.325Z",
+        "transitStartedAt": "2026-10-05T19:38:35.325Z",
+        "alert": {
+          "active": true,
+          "reason": "limite_de_transito_excedido",
+          "elapsedMs": 345843734,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.059Z"
+        },
+        "history": [
+          {
+            "id": "late-posted",
+            "occurredAt": "2026-10-05T19:38:35.325Z",
+            "status": "postado",
+            "carrierStatus": "PACKAGE_ACCEPTED"
+          },
+          {
+            "id": "late-transit",
+            "occurredAt": "2026-10-06T01:38:35.325Z",
+            "status": "em_transito",
+            "carrierStatus": "MOVING_BETWEEN_HUBS"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "status",
+          "expected": "em_transito",
+          "actual": "em_transito",
+          "passed": true
+        },
+        {
+          "field": "history.length",
+          "expected": 2,
+          "actual": 2,
+          "passed": true
+        },
+        {
+          "field": "alert.active",
+          "expected": true,
+          "actual": true,
+          "passed": true
+        },
+        {
+          "field": "alert.reason",
+          "expected": "limite_de_transito_excedido",
+          "actual": "limite_de_transito_excedido",
+          "passed": true
+        },
+        {
+          "field": "alert.thresholdMs",
+          "expected": 259200000,
+          "actual": 259200000,
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 8
+    },
+    {
+      "label": "Cadastrar fixture CTYUNKNOWN com estado inventado pela transportadora",
+      "method": "POST",
+      "path": "/shipments",
+      "request": {
+        "code": "CTYUNKNOWN"
+      },
+      "http_status": 200,
+      "response": {
+        "code": "CTYUNKNOWN",
+        "registeredAt": "2026-10-09T19:38:35.331Z",
+        "status": "desconhecido",
+        "statusAt": "2026-10-09T19:38:35.330Z",
+        "lastEventAt": "2026-10-09T19:38:35.330Z",
+        "transitStartedAt": null,
+        "alert": {
+          "active": false,
+          "reason": "sem_inicio_de_transito",
+          "elapsedMs": null,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.064Z"
+        },
+        "history": [
+          {
+            "id": "unknown-1",
+            "occurredAt": "2026-10-09T19:38:35.330Z",
+            "status": "desconhecido",
+            "carrierStatus": "SOMETHING_NEW_FROM_CARRIER"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "code",
+          "expected": "CTYUNKNOWN",
+          "actual": "CTYUNKNOWN",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 3
+    },
+    {
+      "label": "Estado inventado continua desconhecido; não vira entregue nem inventa trânsito",
+      "method": "POST",
+      "path": "/shipments/CTYUNKNOWN/sync",
+      "http_status": 200,
+      "response": {
+        "code": "CTYUNKNOWN",
+        "registeredAt": "2026-10-09T19:38:35.331Z",
+        "status": "desconhecido",
+        "statusAt": "2026-10-09T19:38:35.330Z",
+        "lastEventAt": "2026-10-09T19:38:35.330Z",
+        "transitStartedAt": null,
+        "alert": {
+          "active": false,
+          "reason": "sem_inicio_de_transito",
+          "elapsedMs": null,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.069Z"
+        },
+        "history": [
+          {
+            "id": "unknown-1",
+            "occurredAt": "2026-10-09T19:38:35.330Z",
+            "status": "desconhecido",
+            "carrierStatus": "SOMETHING_NEW_FROM_CARRIER"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "status",
+          "expected": "desconhecido",
+          "actual": "desconhecido",
+          "passed": true
+        },
+        {
+          "field": "history.length",
+          "expected": 1,
+          "actual": 1,
+          "passed": true
+        },
+        {
+          "field": "history.0.status",
+          "expected": "desconhecido",
+          "actual": "desconhecido",
+          "passed": true
+        },
+        {
+          "field": "history.0.carrierStatus",
+          "expected": "SOMETHING_NEW_FROM_CARRIER",
+          "actual": "SOMETHING_NEW_FROM_CARRIER",
+          "passed": true
+        },
+        {
+          "field": "transitStartedAt",
+          "expected": null,
+          "actual": null,
+          "passed": true
+        },
+        {
+          "field": "alert.active",
+          "expected": false,
+          "actual": false,
+          "passed": true
+        },
+        {
+          "field": "alert.reason",
+          "expected": "sem_inicio_de_transito",
+          "actual": "sem_inicio_de_transito",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 5
+    },
+    {
+      "label": "Leitura local audita cinco ocorrências sem nova consulta ao provedor",
+      "method": "GET",
+      "path": "/shipments/CTY123",
+      "http_status": 200,
+      "response": {
+        "code": "CTY123",
+        "registeredAt": "2026-10-09T19:38:35.316Z",
+        "status": "entregue",
+        "statusAt": "2026-10-08T16:00:00.000Z",
+        "lastEventAt": "2026-10-08T17:00:00.000Z",
+        "transitStartedAt": "2026-10-08T08:00:00.000Z",
+        "alert": {
+          "active": false,
+          "reason": "entrega_concluida",
+          "elapsedMs": 28800000,
+          "thresholdMs": 259200000,
+          "evaluatedAt": "2026-10-09T19:42:39.077Z"
+        },
+        "history": [
+          {
+            "id": "e-posted",
+            "occurredAt": "2026-10-08T08:00:00.000Z",
+            "status": "postado",
+            "carrierStatus": "PACKAGE_ACCEPTED"
+          },
+          {
+            "id": "e-transit",
+            "occurredAt": "2026-10-08T10:00:00.000Z",
+            "status": "em_transito",
+            "carrierStatus": "MOVING_BETWEEN_HUBS"
+          },
+          {
+            "id": "e-route",
+            "occurredAt": "2026-10-08T14:00:00.000Z",
+            "status": "saiu_para_entrega",
+            "carrierStatus": "DRIVER_ROUTE"
+          },
+          {
+            "id": "e-delivered",
+            "occurredAt": "2026-10-08T16:00:00.000Z",
+            "status": "entregue",
+            "carrierStatus": "DELIVERY_CONFIRMED"
+          },
+          {
+            "id": "e-unknown",
+            "occurredAt": "2026-10-08T17:00:00.000Z",
+            "status": "desconhecido",
+            "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+          }
+        ]
+      },
+      "checks": [
+        {
+          "field": "history",
+          "expected": [
+            {
+              "id": "e-posted",
+              "occurredAt": "2026-10-08T08:00:00.000Z",
+              "status": "postado",
+              "carrierStatus": "PACKAGE_ACCEPTED"
+            },
+            {
+              "id": "e-transit",
+              "occurredAt": "2026-10-08T10:00:00.000Z",
+              "status": "em_transito",
+              "carrierStatus": "MOVING_BETWEEN_HUBS"
+            },
+            {
+              "id": "e-route",
+              "occurredAt": "2026-10-08T14:00:00.000Z",
+              "status": "saiu_para_entrega",
+              "carrierStatus": "DRIVER_ROUTE"
+            },
+            {
+              "id": "e-delivered",
+              "occurredAt": "2026-10-08T16:00:00.000Z",
+              "status": "entregue",
+              "carrierStatus": "DELIVERY_CONFIRMED"
+            },
+            {
+              "id": "e-unknown",
+              "occurredAt": "2026-10-08T17:00:00.000Z",
+              "status": "desconhecido",
+              "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+            }
+          ],
+          "actual": [
+            {
+              "id": "e-posted",
+              "occurredAt": "2026-10-08T08:00:00.000Z",
+              "status": "postado",
+              "carrierStatus": "PACKAGE_ACCEPTED"
+            },
+            {
+              "id": "e-transit",
+              "occurredAt": "2026-10-08T10:00:00.000Z",
+              "status": "em_transito",
+              "carrierStatus": "MOVING_BETWEEN_HUBS"
+            },
+            {
+              "id": "e-route",
+              "occurredAt": "2026-10-08T14:00:00.000Z",
+              "status": "saiu_para_entrega",
+              "carrierStatus": "DRIVER_ROUTE"
+            },
+            {
+              "id": "e-delivered",
+              "occurredAt": "2026-10-08T16:00:00.000Z",
+              "status": "entregue",
+              "carrierStatus": "DELIVERY_CONFIRMED"
+            },
+            {
+              "id": "e-unknown",
+              "occurredAt": "2026-10-08T17:00:00.000Z",
+              "status": "desconhecido",
+              "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+            }
+          ],
+          "passed": true
+        },
+        {
+          "field": "status",
+          "expected": "entregue",
+          "actual": "entregue",
+          "passed": true
+        },
+        {
+          "field": "history.length",
+          "expected": 5,
+          "actual": 5,
+          "passed": true
+        },
+        {
+          "field": "alert.active",
+          "expected": false,
+          "actual": false,
+          "passed": true
+        },
+        {
+          "field": "statusAt",
+          "expected": "2026-10-08T16:00:00.000Z",
+          "actual": "2026-10-08T16:00:00.000Z",
+          "passed": true
+        }
+      ],
+      "passed": true,
+      "duration_ms": 8
+    }
+  ]
+}

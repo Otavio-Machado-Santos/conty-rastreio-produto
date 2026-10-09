@@ -1,0 +1,106 @@
+{
+  "challenge": 7,
+  "reviewed_sha": "b95a0badf514f927d3d349892f7d85c923cda8c9",
+  "base_sha": "7ea9eb9dc55d965c32b37892c10b78c600114db9",
+  "reviewer": "Codex /root/implementar_vendas, independente do autor do desafio 7",
+  "review_axis": "B: robustez, HTTP, identidade de eventos, concorrência, cronologia e alertas; delta do comparador de timestamps e fronteira UTC do ano 10000",
+  "checked_at": "2026-10-09T19:19:16.791Z",
+  "runtime": "Node.js v22.23.3",
+  "repository": "/Users/flowbix_redfinger/XiaomiMiMoProjects/conty challenge/projetos/conty-rastreio-produto",
+  "read": [
+    "docs/enunciado.txt",
+    "README.md",
+    "package.json",
+    "src/domain/tracking-service.js",
+    "src/providers/aggregator-http-client.js",
+    "src/providers/mock-server.js",
+    "src/http-api.js",
+    "src/server.js",
+    "test/*.test.js",
+    "scripts/verify-http.js"
+  ],
+  "commands": [
+    {
+      "command": "git rev-parse HEAD; git status --short",
+      "result": "Candidato delta fixo confirmado; checkout sem mudanças."
+    },
+    {
+      "command": "git diff f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460...b95a0badf514f927d3d349892f7d85c923cda8c9",
+      "result": "Revisado o comparador numérico Date.parse, teste de regressão, README e logs antes/depois."
+    },
+    {
+      "command": "npm test (Node.js 22 no PATH)",
+      "exit_code": 0,
+      "result": "28 testes passaram, nenhuma falha."
+    },
+    {
+      "command": "node revisoes/probes/07-b.mjs (Node.js 22)",
+      "exit_code": 0,
+      "result": "Os 7 grupos anteriores passaram novamente: concorrência, IDs, timeout, defesa do estado e alerta."
+    },
+    {
+      "command": "node revisoes/probes/07-b-delta.mjs (Node.js 22)",
+      "exit_code": 0,
+      "result": "Fronteira UTC10000 passou com chegada antiga posterior, aliases/fusos equivalentes, empate, desconhecido, entrega terminal e colisão atômica."
+    },
+    {
+      "command": "git diff --check f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460...b95a0badf514f927d3d349892f7d85c923cda8c9",
+      "exit_code": 2,
+      "result": "Espaços finais apenas em docs/evidence/utc-expanded-before.txt:12,15 (log bruto de falha); nenhuma ocorrência no código."
+    }
+  ],
+  "own_probes": [
+    {
+      "case": "Colisão de ID alias que já não é representante visível",
+      "result": "Alias anterior continua protegido; ID alterado rejeita o lote inteiro sem incorporar evento válido parcial."
+    },
+    {
+      "case": "Três permutações com timestamp empatado e desconhecido posterior",
+      "result": "Histórico e status iguais; estado desconhecido permanece auditável e não substitui o conhecido."
+    },
+    {
+      "case": "10 consultas concluídas em ordem reversa e alteração dos snapshots devolvidos",
+      "result": "Todos os 10 eventos preservados; status mais recente permanece; snapshot externo não muda o estado."
+    },
+    {
+      "case": "Limite exato, primeiro milissegundo, desconhecido isolado, entrega terminal e scans antigos/posteriores",
+      "result": "1000 ms sem alerta, 1001 ms com alerta; entrega encerra alerta e contagem, mesmo após 30 dias."
+    },
+    {
+      "case": "10 cadastros simultâneos com falha de provedor e retry posterior",
+      "result": "Uma tentativa externa compartilhada, sem cadastro local em erro; retry posterior funciona."
+    },
+    {
+      "case": "Cliente HTTP real recebendo headers e corpo incompleto que trava",
+      "result": "Timeout limita também a leitura do corpo; ProviderError retornou em aproximadamente 64 ms para timeout de 60 ms."
+    },
+    {
+      "case": "POST pela API real com 70 KiB",
+      "result": "400 invalid_request conforme contrato; cadastro e histórico anteriores preservados."
+    },
+    {
+      "case": "Fronteira UTC do ano10000 com aliases, empate e entrega terminal",
+      "result": "Histórico ordena9999 antes de+010000; evento antigo não regride; offsets deduplicam; prioridade de empate permanece; desconhecido posterior não entrega; tempo de entrega4,5h sem alerta; colisão preserva estado."
+    }
+  ],
+  "findings": [],
+  "requirements_status": "Todos os requisitos revisados e a regressão UTC10000 passaram; comparador numérico preserva prioridade de empates e deduplicação.",
+  "limitations": [
+    "Armazenamento em memória perde cadastros em reinício; declarado no README e persistência não é requisito do enunciado.",
+    "Alertas são dados retornados pela API; não enviam notificações externas, conforme escopo declarado.",
+    "Sem autenticação ou transportadora real; testes e probes usam serviços HTTP locais e dados sintéticos.",
+    "Código do candidato permaneceu inalterado."
+  ],
+  "verdict": "approved",
+  "previous_reviewed_sha": "f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460",
+  "delta_base_sha": "f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460",
+  "nonblocking_observations": [
+    {
+      "classification": "suggestion",
+      "priority": "P3",
+      "file": "docs/evidence/utc-expanded-before.txt",
+      "line": 12,
+      "detail": "O log bruto contém espaços em linhas vazias12/15, detectados por git diff --check. Limpeza editorial opcional; não afeta prova ou execução."
+    }
+  ]
+}

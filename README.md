@@ -145,4 +145,6 @@ Esta entrega usa dados sintéticos e armazenamento em memória para tornar a reg
 
 ## Uso de IA e revisão
 
-O Codex gerou a implementação, o mock, os testes e esta documentação. O mesmo agente verificou o contrato, executou os testes em Node.js 22 e validou o fluxo por HTTP real, incluindo os casos de erro e borda descritos. Não houve revisão humana do código nesta etapa. Revisões independentes adicionais, quando concluídas, serão registradas junto às evidências antes do envio do desafio; este texto não as considera já realizadas.
+Codex produziu código, testes e documentação. Dois agentes Codex independentes do implementador revisaram o commit `b95a0badf514f927d3d349892f7d85c923cda8c9` e liberaram a entrega após testes e sondagens próprias. Os pareceres completos estão em `docs/reviews/`. O coordenador conferiu a instalação e os testes em checkout isolado e registrou o fluxo HTTP real. Não foi realizada revisão humana do código. A validação usa dados sintéticos e ambiente local; limites e interpretações do contrato estão documentados.
+
+[Verificação final, revisões independentes e captura do fluxo real](docs/verificacao-final.md).

@@ -1,0 +1,127 @@
+{
+  "challenge": 7,
+  "title": "Rastreio do produto enviado ao criador",
+  "reviewed_sha": "b95a0badf514f927d3d349892f7d85c923cda8c9",
+  "base_sha": "7ea9eb9dc55d965c32b37892c10b78c600114db9",
+  "reviewer": "/root/implementar_descoberta — revisão independente A, Codex; não implementou este desafio",
+  "runtime": "Node v22.23.3",
+  "repository": "/Users/flowbix_redfinger/XiaomiMiMoProjects/conty challenge/projetos/conty-rastreio-produto",
+  "scope": "Revisão delta somente leitura: comparação numérica de timestamps, regressão nova, README e evidências; probe independente original completo reexecutado, suíte inteira e checks sintáticos dos dois arquivos de código modificados. Nenhum arquivo do repo alterado, push ou envio.",
+  "commands": [
+    {
+      "command": "git rev-parse HEAD",
+      "exit_code": 0,
+      "result": "b95a0badf514f927d3d349892f7d85c923cda8c9, confirmado antes e depois"
+    },
+    {
+      "command": "git diff f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460...b95a0badf514f927d3d349892f7d85c923cda8c9",
+      "exit_code": 0,
+      "result": "Código de produção muda somente a comparação principal de compareEvents para Date.parse; demais desempates permanecem. Adiciona uma regressão, README e capturas antes/depois."
+    },
+    {
+      "command": "node /Users/flowbix_redfinger/XiaomiMiMoProjects/conty challenge/revisoes/07-a-adversarial.mjs",
+      "exit_code": 0,
+      "result": "Os seis grupos passaram, incluindo o mesmo probe antes falho, 720 permutações, status desconhecidos, limites exatos e servidores HTTP reais. Evento antigo não regride em_transito; statusAt e lastEventAt ficam em +010000-01-01T02:30:00.000Z.",
+      "output_file": "revisoes/07-a-delta-probe.txt",
+      "structured_output": "revisoes/07-a-delta-adversarial-results.json"
+    },
+    {
+      "command": "npm test",
+      "exit_code": 0,
+      "result": "28 testes, 28 passaram, 0 falharam; duração reportada 180.852458 ms",
+      "output_file": "revisoes/07-a-delta-tests.txt"
+    },
+    {
+      "command": "node --check src/domain/tracking-service.js",
+      "exit_code": 0,
+      "result": "Nenhum diagnóstico"
+    },
+    {
+      "command": "node --check test/domain.test.js",
+      "exit_code": 0,
+      "result": "Nenhum diagnóstico"
+    },
+    {
+      "command": "git diff f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460...b95a0badf514f927d3d349892f7d85c923cda8c9 --check",
+      "exit_code": 2,
+      "result": "Somente trailing whitespace em docs/evidence/utc-expanded-before.txt:12 e :15, presente no stdout bruto capturado. Nenhum erro apontado em código. Observação cosmética fora do enunciado."
+    },
+    {
+      "command": "git diff entre os SHAs para docs/enunciado.txt, src/http-api.js, src/providers, src/server.js, src/errors.js, package.json, package-lock.json e fixtures/aggregator-raw.json",
+      "exit_code": 0,
+      "result": "Vazio: contrato, API, interface, payload e dependências não alterados"
+    },
+    {
+      "command": "git status --porcelain",
+      "exit_code": 0,
+      "result": "Vazio antes e depois: nenhuma alteração do revisor no repositório"
+    }
+  ],
+  "contract_validation": [
+    {
+      "requirement": "Registrar código e provedor HTTP substituível",
+      "result": "pass",
+      "evidence": "Domínio recebe register/getEvents, sem importar o dialeto do agregador. Probes usaram tanto um provedor normalizado em memória como API → adaptador → provedor HTTP reais. Vinte cadastros concorrentes do mesmo código produziram um 201, dezenove 200 e somente um POST ao agregador."
+    },
+    {
+      "requirement": "Normalizar cinco status e manter desconhecidos seguros",
+      "result": "pass",
+      "evidence": "Cinco mapeamentos exatos foram confirmados. DELIVERED, DELIVERY_CONFIRMED com espaço, ENTREGUE, __proto__, constructor e toString viram desconhecido. Unknown após evento conhecido não inventa entrega; unknown isolado não inventa trânsito ou alerta."
+    },
+    {
+      "requirement": "Duplicatas e histórico idempotente",
+      "result": "pass",
+      "evidence": "720 ordens de seis eventos produziram exatamente o mesmo histórico cronológico. Repetir o lote e reemitir a mesma ocorrência com outro ID não duplica. Probes HTTP confirmaram equivalência de timestamps UTC e -03:00 e preservação integral após lote parcialmente inválido."
+    },
+    {
+      "requirement": "Evento antigo recebido depois não regride status",
+      "result": "pass",
+      "evidence": "compareEvents agora ordena pelo instante numérico. O probe independente original, antes falho, passou: chegada posterior do evento antigo conserva status em_transito, statusAt e lastEventAt no novo instante UTC +010000, ordena o histórico corretamente e recupera o início de trânsito antigo."
+    },
+    {
+      "requirement": "Atraso configurável com data controlada, sem marcar entregue",
+      "result": "pass",
+      "evidence": "Limites de 1 ms, 1 segundo e 72 horas testados em limite−1, limite e limite+1. Alerta somente após o limite; clock anterior ao início produz elapsedMs=0. Entrega termina a contagem e mantém active=false mesmo consultada 100 dias depois."
+    },
+    {
+      "requirement": "Exemplo bruto/normalizado, API, testes e nota de IA",
+      "result": "pass",
+      "evidence": "Fixtures e exemplo normalizado completos presentes, com desconhecido auditável. README explica comando, API, regras e armazenamento em memória. Nota não inventa revisão humana; o coordenador deve atualizar revisões independentes após os gates finais. Não executei verify:http porque ele sobrescreve evidências do repositório; usei servidores HTTP independentes."
+    }
+  ],
+  "findings": [],
+  "outside_contract_suggestions": [
+    {
+      "priority": "P3",
+      "blocking": false,
+      "file": "docs/evidence/utc-expanded-before.txt",
+      "line": 12,
+      "additional_line": 15,
+      "description": "git diff --check encontra espaços em duas linhas vazias do stdout bruto da falha. É somente formato da evidência e não afeta API ou testes.",
+      "suggestion": "Opcional: se o gate editorial exigir diff --check limpo, remover somente esses espaços preservando o conteúdo da prova. Nenhuma alteração foi feita pelo revisor.",
+      "severity": "cosmetic"
+    }
+  ],
+  "verdict": "pass",
+  "limitations": [
+    "Pass se refere ao SHA b95a0badf514f927d3d349892f7d85c923cda8c9. Os achados da revisão anterior permanecem arquivados, com o único achado contratual agora resolvido.",
+    "O diff check editorial aponta somente whitespace em evidência bruta, fora do enunciado; esse resultado não foi omitido nem descrito como verde.",
+    "Nenhuma transportadora real, persistência de produção, notificação ou deploy foi validado. As exclusões continuam descritas no README."
+  ],
+  "delta_base_sha": "f4c8c9ad7f2aa9cfba9af11c6d95181022e5c460",
+  "previous_review": "revisoes/07-a-anterior.json",
+  "previous_adversarial_output": "revisoes/07-a-adversarial-anterior-results.json",
+  "resolved_findings": [
+    {
+      "id": "07-A-01",
+      "previous_priority": "P3",
+      "file": "src/domain/tracking-service.js",
+      "line": 55,
+      "status": "fixed_and_independently_verified",
+      "fixed_sha": "b95a0badf514f927d3d349892f7d85c923cda8c9",
+      "proof": "Probe idêntico antes exit 1, agora exit 0; status após evento antigo mantém em_transito. Regressão nova também verifica lastEventAt, transitStartedAt, duração, ordem e repetição.",
+      "previous_output": "revisoes/07-a-adversarial-anterior-results.json",
+      "current_output": "revisoes/07-a-delta-adversarial-results.json"
+    }
+  ]
+}
