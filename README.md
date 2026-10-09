@@ -113,7 +113,7 @@ const events = await provider.getEvents(code);
 ### Ordem, idempotência e atomicidade
 
 - Timestamps devem conter fuso explícito e são convertidos para UTC. Datas inexistentes ou eventos malformados fazem o lote inteiro falhar, antes de qualquer alteração local.
-- O histórico é ordenado por instante do evento. Em empate, a prioridade é `desconhecido < postado < em_transito < saiu_para_entrega < excecao < entregue`; depois usa texto bruto e id em comparação lexical determinística. A ordem de chegada não participa da decisão.
+- O histórico é ordenado pelo instante numérico do evento (`Date.parse`), incluindo offsets que geram um ano UTC expandido. Em empate, a prioridade é `desconhecido < postado < em_transito < saiu_para_entrega < excecao < entregue`; depois usa texto bruto e id em comparação lexical determinística. A ordem de chegada não participa da decisão.
 - Um id repetido com o mesmo conteúdo é idempotente. Reutilizar o id com conteúdo diferente é erro de protocolo e preserva o histórico anterior.
 - Ocorrências com a mesma combinação normalizada `(instante, estado, texto bruto)` são únicas mesmo quando o agregador reemite outro id. O representante usa o menor id lexical. Os ids anteriores continuam registrados para detectar colisões futuras.
 - O estado atual é o evento conhecido mais recente. `entregue` é terminal para este pacote: scans atrasados, estados desconhecidos ou atualizações posteriores inconsistentes não reabrem uma entrega. Devoluções não fazem parte deste fluxo e precisariam de um contrato próprio.
@@ -131,9 +131,10 @@ O relógio é injetável. A configuração padrão é 72 horas; `TRANSIT_LIMIT_H
 
 ## Validação e evidências
 
-`npm test` executa **27 testes** em Node.js 22.23.3, sem rede externa. A suíte inclui domínio, cliente com servidor HTTP real e fluxo API → cliente → agregador. Testa eventos fora de ordem, repetições, empate de timestamps, status inventado, troca de fuso, erro/timeout HTTP, falhas de lote sem alteração parcial, concorrência, cópias do histórico e limites de atraso com data controlada.
+`npm test` executa **28 testes** em Node.js 22.23.3, sem rede externa. A suíte inclui domínio, cliente com servidor HTTP real e fluxo API → cliente → agregador. Testa eventos fora de ordem, repetições, empate de timestamps, status inventado, troca de fuso, ano UTC expandido por offset, erro/timeout HTTP, falhas de lote sem alteração parcial, concorrência, cópias do histórico e limites de atraso com data controlada.
 
 - [Saída real da suíte](docs/evidence/test.txt).
+- Regressão de ordenação com ano UTC expandido: [falha reproduzida antes da correção](docs/evidence/utc-expanded-before.txt) e [teste passando depois](docs/evidence/utc-expanded-after.txt).
 - [Tráfego HTTP e respostas verificadas](docs/evidence/http-flow.json), gerado novamente por `npm run verify:http`.
 - [Resposta normalizada](docs/example-normalized.json) e [payload bruto](fixtures/aggregator-raw.json).
 - A demonstração no navegador utiliza HTTP real e pode ser usada para registrar o cadastro, consulta e consulta repetida.

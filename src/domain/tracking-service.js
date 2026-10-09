@@ -52,7 +52,7 @@ function fingerprint(event) {
 }
 
 function compareEvents(a, b) {
-  return compareStrings(a.occurredAt, b.occurredAt)
+  return Date.parse(a.occurredAt) - Date.parse(b.occurredAt)
     || tiedStatusPriority.get(a.status) - tiedStatusPriority.get(b.status)
     || compareStrings(a.carrierStatus, b.carrierStatus)
     || compareStrings(a.id, b.id);

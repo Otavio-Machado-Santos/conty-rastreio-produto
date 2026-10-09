@@ -188,6 +188,31 @@ test('fusos explícitos do mesmo instante são canônicos e deduplicam', async (
   assert.equal(state.history[0].occurredAt, '2026-10-08T08:00:00.000Z');
 });
 
+test('ano UTC expandido por offset mantém ordem numérica e evento antigo não regride estado', async () => {
+  const ctx = setup({ clock: () => new Date('+010000-01-01T03:00:00.000Z') });
+  await ctx.service.register('CTY123');
+  const newer = {
+    id: 'newer-moving', occurredAt: '9999-12-31T23:30:00-03:00',
+    status: 'em_transito', carrierStatus: 'MOVING_BETWEEN_HUBS',
+  };
+  const older = {
+    id: 'older-posted', occurredAt: '9999-12-31T22:00:00Z',
+    status: 'postado', carrierStatus: 'PACKAGE_ACCEPTED',
+  };
+  ctx.setBatch([newer]);
+  assert.equal((await ctx.service.sync('CTY123')).status, 'em_transito');
+  ctx.setBatch([older]);
+  const state = await ctx.service.sync('CTY123');
+  assert.equal(state.status, 'em_transito');
+  assert.equal(state.statusAt, '+010000-01-01T02:30:00.000Z');
+  assert.equal(state.lastEventAt, state.statusAt);
+  assert.equal(state.transitStartedAt, '9999-12-31T22:00:00.000Z');
+  assert.equal(state.alert.elapsedMs, 5 * hour);
+  assert.deepEqual(state.history.map(item => item.id), ['older-posted', 'newer-moving']);
+  ctx.setBatch([newer, older, newer]);
+  assert.deepEqual(await ctx.service.sync('CTY123'), state);
+});
+
 test('consultas concorrentes com resposta antiga concluída depois preservam eventos e estado', async () => {
   let firstResolve;
   let calls = 0;

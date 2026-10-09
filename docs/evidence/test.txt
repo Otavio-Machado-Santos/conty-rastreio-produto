@@ -6,171 +6,177 @@ TAP version 13
 # Subtest: API e agregador HTTP reais: cadastrar, sincronizar, repetir, ler entrega e desconhecido
 ok 1 - API e agregador HTTP reais: cadastrar, sincronizar, repetir, ler entrega e desconhecido
   ---
-  duration_ms: 89.963958
+  duration_ms: 48.457209
   type: 'test'
   ...
 # Subtest: API diferencia entrada inválida, rota/código ausente e método incorreto
 ok 2 - API diferencia entrada inválida, rota/código ausente e método incorreto
   ---
-  duration_ms: 27.598792
+  duration_ms: 13.34025
   type: 'test'
   ...
 # Subtest: indisponibilidade do agregador retorna 502 preservando cadastro e histórico
 ok 3 - indisponibilidade do agregador retorna 502 preservando cadastro e histórico
   ---
-  duration_ms: 6.262167
+  duration_ms: 3.063791
   type: 'test'
   ...
 # Subtest: demonstração visual é servida localmente com identificação clara dos dados sintéticos
 ok 4 - demonstração visual é servida localmente com identificação clara dos dados sintéticos
   ---
-  duration_ms: 6.350042
+  duration_ms: 3.697458
   type: 'test'
   ...
 # Subtest: cadastro idempotente normaliza código e chama o provedor uma vez inclusive em concorrência
 ok 5 - cadastro idempotente normaliza código e chama o provedor uma vez inclusive em concorrência
   ---
-  duration_ms: 3.689708
+  duration_ms: 3.134875
   type: 'test'
   ...
 # Subtest: códigos inválidos são recusados antes de acessar o agregador
 ok 6 - códigos inválidos são recusados antes de acessar o agregador
   ---
-  duration_ms: 1.174
+  duration_ms: 0.899958
   type: 'test'
   ...
 # Subtest: falha no cadastro não cadastra localmente e permite uma nova tentativa
 ok 7 - falha no cadastro não cadastra localmente e permite uma nova tentativa
   ---
-  duration_ms: 0.63125
+  duration_ms: 0.35725
   type: 'test'
   ...
 # Subtest: histórico cronológico deduplica repetidos e evento antigo recebido depois não regride status
 ok 8 - histórico cronológico deduplica repetidos e evento antigo recebido depois não regride status
   ---
-  duration_ms: 0.427625
+  duration_ms: 1.194458
   type: 'test'
   ...
 # Subtest: ocorrência igual com ids diferentes é única e representante é determinístico
 ok 9 - ocorrência igual com ids diferentes é única e representante é determinístico
   ---
-  duration_ms: 0.405542
+  duration_ms: 0.343375
   type: 'test'
   ...
 # Subtest: empates usam prioridade explícita e histórico igual independentemente da ordem
 ok 10 - empates usam prioridade explícita e histórico igual independentemente da ordem
   ---
-  duration_ms: 0.321875
+  duration_ms: 0.852
   type: 'test'
   ...
 # Subtest: desconhecido fica auditável, não vira entregue e não substitui o estado conhecido
 ok 11 - desconhecido fica auditável, não vira entregue e não substitui o estado conhecido
   ---
-  duration_ms: 0.252666
+  duration_ms: 0.14025
   type: 'test'
   ...
 # Subtest: limite é configurável e só ativa depois dele: instante exato e primeiro milissegundo
 ok 12 - limite é configurável e só ativa depois dele: instante exato e primeiro milissegundo
   ---
-  duration_ms: 0.159625
+  duration_ms: 0.172
   type: 'test'
   ...
 # Subtest: entrega concluída desativa alerta e congela duração, mesmo consultada muitos dias depois
 ok 13 - entrega concluída desativa alerta e congela duração, mesmo consultada muitos dias depois
   ---
-  duration_ms: 2.695833
+  duration_ms: 0.437667
   type: 'test'
   ...
 # Subtest: exceção não apaga o início do trânsito e mantém alerta quando o limite já passou
 ok 14 - exceção não apaga o início do trânsito e mantém alerta quando o limite já passou
   ---
-  duration_ms: 1.115333
+  duration_ms: 0.353959
   type: 'test'
   ...
 # Subtest: falha do provedor, lote inválido ou colisão de id não altera parcialmente o histórico
 ok 15 - falha do provedor, lote inválido ou colisão de id não altera parcialmente o histórico
   ---
-  duration_ms: 0.820792
+  duration_ms: 0.351625
   type: 'test'
   ...
 # Subtest: fusos explícitos do mesmo instante são canônicos e deduplicam
 ok 16 - fusos explícitos do mesmo instante são canônicos e deduplicam
   ---
-  duration_ms: 0.1065
+  duration_ms: 0.062375
+  type: 'test'
+  ...
+# Subtest: ano UTC expandido por offset mantém ordem numérica e evento antigo não regride estado
+ok 17 - ano UTC expandido por offset mantém ordem numérica e evento antigo não regride estado
+  ---
+  duration_ms: 0.1675
   type: 'test'
   ...
 # Subtest: consultas concorrentes com resposta antiga concluída depois preservam eventos e estado
-ok 17 - consultas concorrentes com resposta antiga concluída depois preservam eventos e estado
+ok 18 - consultas concorrentes com resposta antiga concluída depois preservam eventos e estado
   ---
-  duration_ms: 0.210416
+  duration_ms: 0.08825
   type: 'test'
   ...
 # Subtest: leituras devolvem cópias e o relógio anterior ao evento não gera atraso negativo
-ok 18 - leituras devolvem cópias e o relógio anterior ao evento não gera atraso negativo
+ok 19 - leituras devolvem cópias e o relógio anterior ao evento não gera atraso negativo
   ---
-  duration_ms: 0.068042
+  duration_ms: 0.048166
   type: 'test'
   ...
 # Subtest: configuração inválida não inicia serviço
-ok 19 - configuração inválida não inicia serviço
+ok 20 - configuração inválida não inicia serviço
   ---
-  duration_ms: 0.12275
+  duration_ms: 0.108792
   type: 'test'
   ...
 # Subtest: o adaptador mapeia os cinco status e preserva estado inventado como desconhecido
-ok 20 - o adaptador mapeia os cinco status e preserva estado inventado como desconhecido
+ok 21 - o adaptador mapeia os cinco status e preserva estado inventado como desconhecido
   ---
-  duration_ms: 0.954792
+  duration_ms: 1.515833
   type: 'test'
   ...
 # Subtest: cadastro e consulta usam HTTP real no dialeto do vendor
-ok 21 - cadastro e consulta usam HTTP real no dialeto do vendor
+ok 22 - cadastro e consulta usam HTTP real no dialeto do vendor
   ---
-  duration_ms: 36.422917
+  duration_ms: 21.781208
   type: 'test'
   ...
 # Subtest: fixtures com relógio relativo permanecem estáveis em consultas e recadastros
-ok 22 - fixtures com relógio relativo permanecem estáveis em consultas e recadastros
+ok 23 - fixtures com relógio relativo permanecem estáveis em consultas e recadastros
   ---
-  duration_ms: 40.18625
+  duration_ms: 19.191167
   type: 'test'
   ...
 # Subtest: HTTP 503 é erro explícito e não gera status de entrega
-ok 23 - HTTP 503 é erro explícito e não gera status de entrega
+ok 24 - HTTP 503 é erro explícito e não gera status de entrega
   ---
-  duration_ms: 5.196709
+  duration_ms: 2.701667
   type: 'test'
   ...
 # Subtest: timeout aborta consulta HTTP real e retorna falha limitada
-ok 24 - timeout aborta consulta HTTP real e retorna falha limitada
+ok 25 - timeout aborta consulta HTTP real e retorna falha limitada
   ---
-  duration_ms: 43.393875
+  duration_ms: 43.522167
   type: 'test'
   ...
 # Subtest: respostas JSON inválidas, rastreio de outro pacote e estruturas malformadas são recusadas
-ok 25 - respostas JSON inválidas, rastreio de outro pacote e estruturas malformadas são recusadas
+ok 26 - respostas JSON inválidas, rastreio de outro pacote e estruturas malformadas são recusadas
   ---
-  duration_ms: 14.966458
+  duration_ms: 4.17275
   type: 'test'
   ...
 # Subtest: redirect HTTP não muda silenciosamente o destino do cadastro
-ok 26 - redirect HTTP não muda silenciosamente o destino do cadastro
+ok 27 - redirect HTTP não muda silenciosamente o destino do cadastro
   ---
-  duration_ms: 5.69475
+  duration_ms: 2.603333
   type: 'test'
   ...
 # Subtest: configuração do cliente recusa protocolos ou timeouts inválidos
-ok 27 - configuração do cliente recusa protocolos ou timeouts inválidos
+ok 28 - configuração do cliente recusa protocolos ou timeouts inválidos
   ---
-  duration_ms: 0.289666
+  duration_ms: 0.291541
   type: 'test'
   ...
-1..27
-# tests 27
+1..28
+# tests 28
 # suites 0
-# pass 27
+# pass 28
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 250.949959
+# duration_ms 170.847959
