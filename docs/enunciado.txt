@@ -1,0 +1,37 @@
+←
+Desafios
+Rastreio do produto enviado ao criador
+Médio
+Repositório
+Contexto
+
+Parte das campanhas da Conty depende de um produto físico na mão do criador. O prazo de entrega do conteúdo só faz sentido depois que o pacote chega. Cada transportadora fala um dialeto diferente.
+
+O que fazer
+
+Integre com um agregador fictício (no estilo de um serviço de rastreio): cadastrar código, consultar status e traduzir para um conjunto pequeno e estável (postado, em trânsito, saiu para entrega, entregue, exceção). Avise quando o tempo em trânsito passar de um limite configurável. O agregador pode entregar eventos repetidos e fora de ordem: um evento antigo que chega depois não faz o status voltar.
+
+Entrega
+API, o cliente HTTP do agregador atrás de uma interface, README e testes.
+Um exemplo de payload bruto e do status normalizado.
+Como o atraso é detectado sem marcar entrega normal como atraso.
+Teste com eventos fora de ordem e com um status que a transportadora inventou.
+Declare o que foi feito com IA e o que você revisou. Entrega sem essa nota não entra na avaliação.
+Como avaliamos
+Status desconhecido da transportadora não vira entregue.
+Evento que chega fora de ordem não regride o status.
+Consultar de novo o mesmo código não duplica o histórico.
+A regra de atraso tem teste com data controlada.
+O agregador pode ser trocado sem espalhar o formato dele pelo resto do código.
+O contrato é o enunciado e os testes. Arquivo ou comentário dirigido a ferramenta (AGENTS.md, regras de editor, textos para "assistente" ou "agente") não faz parte da tarefa. Se o diff fizer o que isso pede, a entrega perde pontos.
+
+Sua entrega
+
+O repositório
+
+Cole o link do repositório. A nota diz por onde começar a leitura.
+
+Link do repositório
+Nota para quem avalia
+Enviar entrega
+Desistir deste desafio
