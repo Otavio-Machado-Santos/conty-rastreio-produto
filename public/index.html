@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Rastreio do produto — Conty</title>
+  <style>
+    body{font:16px/1.5 system-ui,sans-serif;background:#f4f6f7;color:#192735;margin:0;padding:32px}
+    main{max-width:900px;margin:auto;background:white;padding:30px;border-radius:12px}
+    h1{font-size:28px;margin:0 0 10px}p{max-width:75ch}label{display:block;font-weight:600}
+    input,button{font:inherit;padding:10px 14px;border:1px solid #9caeb9;border-radius:6px;margin:8px 6px 8px 0}
+    button{cursor:pointer;background:#163b52;color:white}button:disabled{opacity:.5;cursor:wait}
+    pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eef3f6;padding:18px;border-radius:8px;font-size:13px}
+    .notice{color:#566878;font-size:14px}.result{font-weight:600}code{font-size:.9em}
+  </style>
+</head>
+<body><main>
+  <h1>Rastreio do produto enviado ao criador</h1>
+  <p>Esta demonstração consulta a API local e um agregador HTTP fictício. Os eventos reais da fixture chegam repetidos, fora de ordem e incluem um estado inventado pela transportadora.</p>
+  <p class="notice">Dados sintéticos · memória local · sem transportadora externa. CTY123: entregue; CTYLATE: trânsito há 96 horas; CTYUNKNOWN: evento desconhecido.</p>
+  <label for="code">Código do pacote</label>
+  <input id="code" value="CTY123" maxlength="40" autocomplete="off">
+  <div>
+    <button data-action="register">1. Cadastrar</button>
+    <button data-action="sync">2. Consultar agregador</button>
+    <button data-action="get">3. Ler estado salvo</button>
+  </div>
+  <p id="status" class="result" aria-live="polite">Aguardando cadastro.</p>
+  <pre id="result">As respostas HTTP aparecerão aqui.</pre>
+</main>
+<script type="module">
+  const buttons=[...document.querySelectorAll('button')];
+  const status=document.getElementById('status');
+  const output=document.getElementById('result');
+  for(const button of buttons)button.addEventListener('click',async()=>{
+    buttons.forEach(item=>item.disabled=true);
+    const code=document.getElementById('code').value.trim().toUpperCase();
+    const action=button.dataset.action;
+    const url=action==='register'?'/shipments':`/shipments/${encodeURIComponent(code)}${action==='sync'?'/sync':''}`;
+    try{
+      const response=await fetch(url,{method:action==='get'?'GET':'POST',headers:{'content-type':'application/json'},
+        ...(action==='register'?{body:JSON.stringify({code})}:{})});
+      const data=await response.json();
+      output.textContent=JSON.stringify(data,null,2);
+      status.textContent=response.ok?`HTTP ${response.status} · ${data.status} · ${data.history.length} eventos · alerta ${data.alert.active?'ativo':'inativo'}`:
+        `HTTP ${response.status} · ${data.message??data.error}`;
+    }catch(error){status.textContent=`Falha de conexão: ${error.message}`;}
+    finally{buttons.forEach(item=>item.disabled=false);}
+  });
+</script></body></html>

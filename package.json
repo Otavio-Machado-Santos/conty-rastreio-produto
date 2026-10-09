@@ -1,0 +1,15 @@
+{
+  "name": "conty-rastreio-produto",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "API de rastreio de produtos com agregador HTTP substituível",
+  "engines": { "node": ">=22 <23" },
+  "scripts": {
+    "start": "node src/server.js",
+    "mock": "node scripts/mock-aggregator.js",
+    "demo": "node scripts/demo.js",
+    "test": "node --test",
+    "verify:http": "node scripts/verify-http.js"
+  }
+}

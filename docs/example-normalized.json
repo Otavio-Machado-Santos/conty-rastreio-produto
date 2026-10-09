@@ -1,0 +1,47 @@
+{
+  "code": "CTY123",
+  "registeredAt": "2026-10-10T08:00:00.000Z",
+  "status": "entregue",
+  "statusAt": "2026-10-08T16:00:00.000Z",
+  "lastEventAt": "2026-10-08T17:00:00.000Z",
+  "transitStartedAt": "2026-10-08T08:00:00.000Z",
+  "alert": {
+    "active": false,
+    "reason": "entrega_concluida",
+    "elapsedMs": 28800000,
+    "thresholdMs": 259200000,
+    "evaluatedAt": "2026-10-10T08:00:00.000Z"
+  },
+  "history": [
+    {
+      "id": "e-posted",
+      "occurredAt": "2026-10-08T08:00:00.000Z",
+      "status": "postado",
+      "carrierStatus": "PACKAGE_ACCEPTED"
+    },
+    {
+      "id": "e-transit",
+      "occurredAt": "2026-10-08T10:00:00.000Z",
+      "status": "em_transito",
+      "carrierStatus": "MOVING_BETWEEN_HUBS"
+    },
+    {
+      "id": "e-route",
+      "occurredAt": "2026-10-08T14:00:00.000Z",
+      "status": "saiu_para_entrega",
+      "carrierStatus": "DRIVER_ROUTE"
+    },
+    {
+      "id": "e-delivered",
+      "occurredAt": "2026-10-08T16:00:00.000Z",
+      "status": "entregue",
+      "carrierStatus": "DELIVERY_CONFIRMED"
+    },
+    {
+      "id": "e-unknown",
+      "occurredAt": "2026-10-08T17:00:00.000Z",
+      "status": "desconhecido",
+      "carrierStatus": "DELIVERED_TO_ANOTHER_DIMENSION"
+    }
+  ]
+}

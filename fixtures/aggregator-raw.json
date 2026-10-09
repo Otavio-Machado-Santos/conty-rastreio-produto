@@ -1,0 +1,11 @@
+{
+  "tracking_code": "CTY123",
+  "checkpoints": [
+    { "event_uuid": "e-delivered", "created_at": "2026-10-08T16:00:00.000Z", "state": "DELIVERY_CONFIRMED" },
+    { "event_uuid": "e-transit", "created_at": "2026-10-08T10:00:00.000Z", "state": "MOVING_BETWEEN_HUBS" },
+    { "event_uuid": "e-posted", "created_at": "2026-10-08T08:00:00.000Z", "state": "PACKAGE_ACCEPTED" },
+    { "event_uuid": "e-transit", "created_at": "2026-10-08T10:00:00.000Z", "state": "MOVING_BETWEEN_HUBS" },
+    { "event_uuid": "e-unknown", "created_at": "2026-10-08T17:00:00.000Z", "state": "DELIVERED_TO_ANOTHER_DIMENSION" },
+    { "event_uuid": "e-route", "created_at": "2026-10-08T14:00:00.000Z", "state": "DRIVER_ROUTE" }
+  ]
+}
